@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_project_manager/app_state.dart';
 import 'package:provider/provider.dart';
-import 'package:my_project_manager/main.dart';
 import 'package:my_project_manager/widgets/big_card.dart';
 
 class GeneratorPage extends StatelessWidget {
@@ -8,7 +8,7 @@ class GeneratorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = context.watch<ApplicationState>();
     var pair = appState.current;
 
     IconData icon = appState.favorites.contains(pair) ? Icons.favorite : Icons.favorite_border;
