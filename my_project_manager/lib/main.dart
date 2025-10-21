@@ -1,14 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_project_manager/app_state.dart';
+import 'package:my_project_manager/firebase_options.dart';
 import 'package:my_project_manager/pages/authentication_page.dart';
 import 'package:provider/provider.dart';
 import 'package:my_project_manager/pages/home_page.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Needed here, because the first page is the sign-in
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
   runApp(
     ChangeNotifierProvider(
@@ -44,19 +50,25 @@ final _router = GoRouter(
           ],
         ),
         GoRoute(
-          path: 'profile',
-          builder: (context, state) {
-            return
-            //Screen from FIREBASE_UI
-            ProfileScreen(
-              providers: const [],
-              actions: [
-                SignedOutAction((context) {
-                  context.pushReplacement('/');
-                }),
-              ],
-            );
-          },
+          path: 'home',
+          builder: (context, state) => const HomePage(),
+          routes: [
+            GoRoute(
+              path: 'profile',
+              builder: (context, state) {
+                return
+                //Screen from FIREBASE_UI
+                ProfileScreen(
+                  providers: const [],
+                  actions: [
+                    SignedOutAction((context) {
+                      context.pushReplacement('/');
+                    }),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
       ],
     ),
